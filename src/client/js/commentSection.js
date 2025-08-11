@@ -1,5 +1,6 @@
 const videoContainer = document.getElementById("videoContainer");
 const form = document.getElementById("commentForm");
+const commentList = document.querySelector(".video__comments ul");
 
 const addcomment = (text, id) => {
   const videoComments = document.querySelector(".video__comments ul");
@@ -41,6 +42,23 @@ const handleSubmit = async (event) => {
   }
 };
 
+deleteComment = async (event) => {
+  const li = event.target.closest("li"); // Get the closest list item
+  if (!li) return; // If no list item is found, do nothing
+  const commentId = li.dataset.id; // Get the comment ID from the data attribute
+  const response = await fetch(`/api/comments/${commentId}`, {
+    method: "DELETE",
+  });
+
+  if (response.status === 200) {
+    li.remove(); // Remove the comment from the DOM
+  }
+};
+
 if (form) {
   form.addEventListener("submit", handleSubmit);
+}
+
+if (commentList) {
+  commentList.addEventListener("click", deleteComment);
 }
